@@ -15,7 +15,7 @@ export CONFIG_FILE="${CI_SUPPORT}/${CONFIG}.yaml"
 cat >~/.condarc <<CONDARC
 
 conda-build:
-  root-dir: /home/conda/feedstock_root/build_artifacts
+ root-dir: /home/conda/feedstock_root/build_artifacts
 
 CONDARC
 
@@ -25,13 +25,6 @@ conda install --yes --quiet conda-forge-ci-setup=2 conda-build -c conda-forge
 setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
 source run_conda_forge_build_setup
-
-# If we have yum requirements build a new specialized image that we will use to run our build in that includes
-# those dependencies.
-if [ -f ${RECIPE_ROOT}/yum_requirements.txt ]; then
-  sudo yum -y install $(cat ${RECIPE_ROOT}/yum_requirements.txt)
-fi
-
 
 # make the build number clobber
 make_build_number "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
