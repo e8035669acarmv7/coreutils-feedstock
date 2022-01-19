@@ -3,7 +3,7 @@
 {% set sha256 = "ce30acdf4a41bc5bb30dd955e9eaa75fa216b4e3deb08889ed32433c7b3b97ce" %}
 
 package:
-  name: {{ name|lower }}
+  name: coreutils-split
   version: {{ version }}
 
 source:
@@ -14,16 +14,38 @@ build:
   number: 0
   skip: true  # [win]
 
-requirements:
-  build:
-    - {{ compiler('c') }}
-    - make
+outputs:
+  
+  - name: {{ name }}
+    script: build_coreutils.sh
 
-test:
-  commands:
-    - ln --relative --help
-    - wc --version
-    - cat --version
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - make
+
+    test:
+      commands:
+        - ln --relative --help
+        - wc --version
+        - cat --version
+
+  - name: gnu-{{ name }}
+    script: build_gnu-coreutils.sh
+
+
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - make
+
+    test:
+      commands:
+        - gln --relative --help
+        - ln --version  # [linux64]
+        - gln --version  # [linux64]
+        - gwc --version
+        - gcat --version
 
 about:
   home: https://www.gnu.org/software/coreutils
@@ -40,3 +62,4 @@ extra:
     - ngam
     - sodre
     - mbargull
+  feedstock-name: coreutils
